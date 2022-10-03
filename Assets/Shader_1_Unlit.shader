@@ -52,18 +52,13 @@ Shader "Unlit/Shader_1_Unlit"
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex); // convert local space to clip space
-                // o.normal = v.normals; // local space normals
                 o.normal = UnityObjectToWorldNormal(v.normals); // world space normals
-                //o.uv = float2(v.uv0.x + _Offset, v.uv0.y);
                 o.uv = v.uv0;
                 return o;
             }
 
             float4 frag (v2f i) : SV_Target // we can use float4 instead of fixed4 (fixed has less precission so it is about performance)
             {
-                // return float4(i.normal, 1); // return normals
-                //return float4(i.uv, 0, 1); // show only one x axis of UV
-
                 float t = InverseLerp(_ColorStart, _ColorEnd, i.uv.x);
 
                 if(_VerticalGradient == 1)
