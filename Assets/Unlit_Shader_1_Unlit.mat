@@ -23,6 +23,8 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
+    - _ColorEnd: 0.412
+    - _ColorStart: 0.119
     - _Offset: 0
     - _Value: 1
     - _VerticalGradient: 1

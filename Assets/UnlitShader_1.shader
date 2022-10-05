@@ -6,9 +6,6 @@ Shader "Unlit/Shader_1_Unlit"
         _ColorB ("Color B", Color) = (.25, .5, .5, 1)
         _ColorStart ("Color Start", Range(0,1)) = 0
         _ColorEnd ("Color End", Range(0, 1)) = 1
-        [MaterialToggle] _VerticalGradient ("Vertical Gradient", int) = 0
-
-        _Offset ("UV Offset", float) = 0
     }
     SubShader
     {
@@ -26,8 +23,6 @@ Shader "Unlit/Shader_1_Unlit"
             float4 _ColorB;
             float _ColorStart;
             float _ColorEnd;
-            bool _VerticalGradient;
-            float _Offset;
 
             struct MeshData // mesh data per vertex
             {
@@ -59,16 +54,9 @@ Shader "Unlit/Shader_1_Unlit"
 
             float4 frag (v2f i) : SV_Target // we can use float4 instead of fixed4 (fixed has less precission so it is about performance)
             {
-                float t = InverseLerp(_ColorStart, _ColorEnd, i.uv.x);
+                float t = saturate(InverseLerp(_ColorStart, _ColorEnd, i.uv.x)); // saturate => Clamp01
 
-                if(_VerticalGradient == 1)
-                {
-                    return lerp(_ColorA, _ColorB, t);
-                }
-                else
-                {
-                    return lerp(_ColorA, _ColorB, t);
-                }
+                return lerp(_ColorA, _ColorB, t);
             }
             ENDCG
         }
