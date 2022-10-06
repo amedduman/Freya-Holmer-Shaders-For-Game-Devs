@@ -54,11 +54,13 @@ Shader "Unlit/Shader_1_Unlit"
 
             float4 frag (v2f i) : SV_Target // we can use float4 instead of fixed4 (fixed has less precission so it is about performance)
             {
-                float t = saturate(InverseLerp(_ColorStart, _ColorEnd, i.uv.x)); // saturate => Clamp01
+                // float t = saturate(InverseLerp(_ColorStart, _ColorEnd, i.uv.x)); // saturate => Clamp01
+                // return lerp(_ColorA, _ColorB, t);
 
-                return lerp(_ColorA, _ColorB, t);
+                return saturate(abs(frac(i.uv.x  * 5) * 2 - 1));
             }
             ENDCG
         }
     }
 }
+
