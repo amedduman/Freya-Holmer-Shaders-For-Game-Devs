@@ -1,12 +1,8 @@
-Shader "Unlit/HealthBar_Shader"
+Shader "Unlit/HealthBar_2"
 {
     Properties
     {
-        _ColorHealthHigh ("Color Health High", Color) = (1,1,1,1)
-        _HealthHighLimit ("Health High Limit", Range(0, 1)) = .8
-        _ColorHealthLow ("Color Health Low", Color) = (1,1,1,1)
-        _HealthLowLimit ("Health Low Limit", Range(0, 1)) = .3
-        _ColorBackground ("Color Backgroud", Color) = (1,1,1,1)
+        _Tex ("Texture", 2D) = "white" {}
         _Percentage ("Percentage", Range(0,1)) = 1
     }
     SubShader
@@ -21,11 +17,7 @@ Shader "Unlit/HealthBar_Shader"
 
             #include "UnityCG.cginc"
 
-            float4 _ColorHealthHigh;
-            float _HealthHighLimit;
-            float4 _ColorHealthLow;
-            float _HealthLowLimit;
-            float4 _ColorBackground;
+            sampler2D _Tex;
             float _Percentage;
 
             struct appdata
@@ -53,27 +45,23 @@ Shader "Unlit/HealthBar_Shader"
                 float uvx = i.uv.x; 
                 if(uvx < _Percentage)
                 {
-                    if(_Percentage > _HealthHighLimit)
+                    if(_Percentage < .2)
                     {
-                        return _ColorHealthHigh;
-                    }
-                    else if(_Percentage < _HealthHighLimit && _Percentage > _HealthLowLimit)
-                    {
-                        return lerp(_ColorHealthLow, _ColorHealthHigh, uvx);
-                    }
-                    else if(_Percentage < _HealthLowLimit)
-                    {
-                        return _ColorHealthLow;
+                        if(_Time.y%1 == 0)
+                        {
+                            return float4(1,1,1,1);
+                        }
+                        return tex2D(_Tex, i.uv);
                     }
                     else
                     {
-                        return float4(1,1,1,1);
+                        return tex2D(_Tex, i.uv);
                     }
                 }
                 else
                 {
                     discard;
-                    return _ColorBackground;
+                    return float4(0,0,0,0);
                 }
             }
             ENDCG
