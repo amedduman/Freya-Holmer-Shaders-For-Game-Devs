@@ -2,7 +2,7 @@ Shader "Unlit/HealthBar_2"
 {
     Properties
     {
-        _Tex ("Texture", 2D) = "white" {}
+        [NoScaleOffset] _Tex ("Texture", 2D) = "white" {}
         _Percentage ("Percentage", Range(0,1)) = 1
     }
     SubShader
@@ -16,6 +16,7 @@ Shader "Unlit/HealthBar_2"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
+            #define TAU 6.28318530718 
 
             sampler2D _Tex;
             float _Percentage;
@@ -40,29 +41,23 @@ Shader "Unlit/HealthBar_2"
                 return o;
             }
 
+            float InverseLerp(float a, float b, float t)
+            {
+                return (t-a) / (b-a);
+            }
+
             float4 frag (v2f i) : SV_Target
             {
-                float uvx = i.uv.x; 
-                if(uvx < _Percentage)
+                float mask = _Percentage < i.uv.x;
+                float4 outCol = tex2D(_Tex, float2(_Percentage, i.uv.y));
+                float flash = (cos(_Time.y * .6 * TAU)+1) * .2 + 1;
+                
+                if(_Percentage < .2)
                 {
-                    if(_Percentage < .2)
-                    {
-                        if(_Time.y%1 == 0)
-                        {
-                            return float4(1,1,1,1);
-                        }
-                        return tex2D(_Tex, i.uv);
-                    }
-                    else
-                    {
-                        return tex2D(_Tex, i.uv);
-                    }
+                    outCol *= flash;
                 }
-                else
-                {
-                    discard;
-                    return float4(0,0,0,0);
-                }
+
+                return lerp(outCol, float4(0,0,0,1), mask);
             }
             ENDCG
         }

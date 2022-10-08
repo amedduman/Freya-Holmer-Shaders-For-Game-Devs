@@ -28,7 +28,7 @@ Material:
     m_Floats:
     - _HealthHighLimit: 0.8
     - _HealthLowLimit: 0.3
-    - _Percentage: 0.523
+    - _Percentage: 0.658
     m_Colors:
     - _ColorHealthHigh: {r: 1, g: 1, b: 1, a: 1}
     - _ColorHealthLow: {r: 1, g: 1, b: 1, a: 1}
