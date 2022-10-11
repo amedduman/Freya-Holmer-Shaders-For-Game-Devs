@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: HealthBar_2
-  m_Shader: {fileID: 4800000, guid: b88f0642f128042c992e617f04c5d4fa, type: 3}
+  m_Name: HealthBar_3
+  m_Shader: {fileID: 4800000, guid: 58b281ccce06141dbbcd00d96310e834, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -26,10 +26,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _HealthHighLimit: 0.8
-    - _HealthLowLimit: 0.3
     - _Percentage: 1
-    m_Colors:
-    - _ColorHealthHigh: {r: 1, g: 1, b: 1, a: 1}
-    - _ColorHealthLow: {r: 1, g: 1, b: 1, a: 1}
+    - _Radius: 0.488
+    m_Colors: []
   m_BuildTextureStacks: []
