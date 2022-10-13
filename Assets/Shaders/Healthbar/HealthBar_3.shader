@@ -3,6 +3,7 @@ Shader "Unlit/HealthBar_3"
     Properties
     {
         _Radius ("Radius", Range(0,1)) = 0
+        _OutlineWidth ("Outline Width", Range(0,1)) = 0
         _Percentage ("Percentage", Range(0,1)) = 1
         [NoScaleOffset] _Tex ("Texture", 2D) = "white" {}
     }
@@ -13,7 +14,7 @@ Shader "Unlit/HealthBar_3"
 
         Pass
         {
-            CGPROGRAM
+            HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
 
@@ -23,6 +24,7 @@ Shader "Unlit/HealthBar_3"
 
             float _Radius;
             float _Percentage;
+            float _OutlineWidth;
             sampler2D _Tex;
 
             struct appdata
@@ -58,20 +60,28 @@ Shader "Unlit/HealthBar_3"
                 float sdf = distance(coords, pointOnLineSeg) - _Radius; 
                 float mask = step(sdf, 0);
                 clip(mask - .5);
-                // return float4(1,1,1,1);  
+
+                float outlineSdf = sdf + _OutlineWidth;
+                float outlineMask = step(outlineSdf, 0);
 
                 float healthMask = _Percentage < i.uv.x;
+                float remainingHealthMask = _Percentage > i.uv.x;
+                remainingHealthMask *= outlineMask;
+                // return remainingHealthMask;
                 float4 outCol = tex2D(_Tex, float2(_Percentage, i.uv.y));
+                outCol = lerp(outCol, float4(.2,.2,.2,1), healthMask);
+
                 float flash = (cos(_Time.y * .6 * TAU)+1) * .2 + 1;
                 
                 if(_Percentage < .2)
                 {
-                    outCol *= flash;
+                    float4 flashedCol =  outCol * flash;
+                    outCol =  lerp(outCol, flashedCol, remainingHealthMask);
                 }
-
-                return lerp(outCol, float4(0,0,0,1), healthMask);
+                
+                return outCol * outlineMask;
             }
-            ENDCG
+            ENDHLSL
         }
     }
 }
